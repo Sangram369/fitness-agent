@@ -1,18 +1,19 @@
 import streamlit as st
 import openai
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def ask_gpt(question):
     prompt = f"You are a polite and helpful fitness assistant. Answer clearly and kindly.\n\nUser: {question}\n\nAssistant:"
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a friendly fitness coach."},
             {"role": "user", "content": prompt}
         ]
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
+
 
 def calculate_bmi(weight, height):
     try:
